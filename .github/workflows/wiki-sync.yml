@@ -1,0 +1,64 @@
+name: Documentation
+
+on:
+  workflow_dispatch: # allows us to run this workflow manually
+    inputs:
+      action_type:
+        description: 'Action Type'
+        required: true
+        type: choice
+        options:
+          - docs_to_wiki
+          - wiki_to_docs
+  push:
+    branches:
+      - master
+    paths:
+      - 'docs/**'
+  repository_dispatch:
+    types: [docs]
+  gollum:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  GIT_AUTHOR_NAME: SparkWs
+  GIT_AUTHOR_EMAIL: console@sparkws.com
+
+jobs:
+  job-sync-docs-to-wiki:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'gollum' && github.event_name == 'workflow_dispatch' && github.event.inputs.action_type == 'docs_to_wiki'
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Sync Docs => Wiki
+        uses: newrelic/wiki-sync-action@main
+        with:
+          source: docs
+          destination: wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+          gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
+          gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+
+  job-sync-wiki-to-docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'gollum' || (github.event_name == 'workflow_dispatch' && github.event.inputs.action_type == 'wiki_to_docs')
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }} # allows us to push back to repo
+          ref: master
+
+      - name: Sync Wiki => Docs
+        uses: newrelic/wiki-sync-action@main
+        with:
+          source: wiki
+          destination: docs
+          token: ${{ secrets.GITHUB_TOKEN }}
+          gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
+          gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+          branch: master
