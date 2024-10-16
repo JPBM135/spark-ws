@@ -1,0 +1,44 @@
+{
+	"name": "@jpbm135/template",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"build:clean": "del-cli dist",
+		"build:check": "tsc --noEmit",
+		"build:esm": "swc ./src --out-dir ./dist --strip-leading-paths",
+		"build": "yarn build:clean && yarn build:check && yarn build:esm",
+		"lint": "prettier --check . && eslint src --ext ts",
+		"lint:fix": "prettier --write . && eslint src --ext ts --fix",
+		"format": "prettier --write . && eslint src --ext ts --fix",
+		"fmt": "yarn format",
+		"start": "env-cmd node --enable-source-maps dist/index.js",
+		"start:dev": "yarn build && yarn dev",
+		"dev": "env-cmd node --enable-source-maps dist/index.js",
+		"update": "yarn upgrade-interactive",
+		"server:update": "git pull && yarn --immutable && yarn build && pm2 restart {0}"
+	},
+	"type": "module",
+	"keywords": [],
+	"author": "JPBM135 <jpedrobm0@gmail.com>",
+	"license": "AGPL-3.0",
+	"private": true,
+	"dependencies": {
+		"yarn": "^1.22.22"
+	},
+	"devDependencies": {
+		"@swc/cli": "^0.4.1-nightly.20240914",
+		"@swc/core": "^1.6.13",
+		"@types/node": "^22.7.5",
+		"cpy-cli": "^5.0.0",
+		"del-cli": "^6.0.0",
+		"env-cmd": "^10.1.0",
+		"eslint": "^8.57.1",
+		"eslint-config-neon": "^0.1.62",
+		"prettier": "^3.3.3",
+		"typescript": "^5.6.3"
+	},
+	"engines": {
+		"node": ">=20"
+	},
+	"packageManager": "yarn@4.5.0"
+}
