@@ -30,7 +30,7 @@ env:
 jobs:
   job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
-    if: github.event_name != 'gollum' && github.event_name == 'workflow_dispatch' && github.event.inputs.action_type == 'docs_to_wiki'
+    if: github.event_name != 'gollum' || (github.event_name == 'workflow_dispatch' && github.event.inputs.action_type == 'docs_to_wiki')
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
