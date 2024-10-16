@@ -12,7 +12,7 @@ on:
           - wiki_to_docs
   push:
     branches:
-      - master
+      - main
     paths:
       - 'docs/**'
   repository_dispatch:
@@ -33,7 +33,7 @@ jobs:
     if: github.event_name != 'gollum' && github.event_name == 'workflow_dispatch' && github.event.inputs.action_type == 'docs_to_wiki'
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Sync Docs => Wiki
         uses: newrelic/wiki-sync-action@main
         with:
@@ -48,7 +48,7 @@ jobs:
     if: github.event_name == 'gollum' || (github.event_name == 'workflow_dispatch' && github.event.inputs.action_type == 'wiki_to_docs')
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }} # allows us to push back to repo
           ref: master
