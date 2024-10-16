@@ -40,7 +40,7 @@ jobs:
         with:
           source: docs
           destination: wiki
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
           branch: main
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} # allows us to push back to repo
+          token: ${{ secrets.GH_PAT }} # allows us to push back to repo
           ref: main
 
       - name: Sync Wiki => Docs
@@ -60,7 +60,7 @@ jobs:
         with:
           source: wiki
           destination: docs
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
           branch: main
